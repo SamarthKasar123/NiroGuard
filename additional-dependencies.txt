@@ -1,0 +1,14 @@
+Dependencies to install after React app creation:
+
+npm install tailwindcss postcss autoprefixer
+npm install recharts
+npm install leaflet react-leaflet @types/leaflet
+npm install react-router-dom @types/react-router-dom
+npm install lucide-react
+npm install @headlessui/react
+npm install react-chartjs-2 chart.js
+npm install workbox-webpack-plugin (for PWA)
+npm install react-i18next i18next (for multilingual support)
+
+TailwindCSS setup:
+npx tailwindcss init -p
