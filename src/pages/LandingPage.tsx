@@ -339,7 +339,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ language }) => {
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 NiroGuard. All rights reserved. Built for Smart India Hackathon 2024.</p>
+            <p>&copy; 2025 NiroGuard. All rights reserved. Built for Smart India Hackathon 2025.</p>
           </div>
         </div>
       </footer>

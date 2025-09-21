@@ -20,6 +20,17 @@ import {
   Clock
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
+import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix for default markers in React-Leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 interface User {
   id: string;
@@ -115,6 +126,91 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, language }) => {
       lastUpdated: '2024-09-20'
     }
   ]);
+
+  // Map data for Northeast India with coordinates
+  const mapMarkers = [
+    { 
+      position: [25.6751, 94.1086] as [number, number], // Kohima
+      title: 'Kohima District',
+      cases: 45,
+      riskLevel: 'high',
+      population: '270,000',
+      type: 'hotspot'
+    },
+    { 
+      position: [24.8170, 93.9368] as [number, number], // Imphal
+      title: 'Imphal West',
+      cases: 32,
+      riskLevel: 'medium',
+      population: '517,000',
+      type: 'hotspot'
+    },
+    { 
+      position: [23.7367, 92.7173] as [number, number], // Aizawl
+      title: 'Aizawl District',
+      cases: 28,
+      riskLevel: 'medium',
+      population: '400,000',
+      type: 'hotspot'
+    },
+    { 
+      position: [26.1445, 91.7362] as [number, number], // Guwahati
+      title: 'Guwahati Rural',
+      cases: 15,
+      riskLevel: 'low',
+      population: '1,116,000',
+      type: 'hotspot'
+    },
+    { 
+      position: [25.5788, 91.8933] as [number, number], // Shillong
+      title: 'Shillong',
+      cases: 18,
+      riskLevel: 'low',
+      population: '354,000',
+      type: 'hotspot'
+    },
+    // Water Quality Monitoring Stations
+    { 
+      position: [26.2006, 92.9376] as [number, number], // Tezpur
+      title: 'Tezpur Water Station',
+      status: 'safe',
+      ph: 7.2,
+      type: 'water_station'
+    },
+    { 
+      position: [24.6637, 93.9063] as [number, number], // Imphal Water Station
+      title: 'Imphal Water Station',
+      status: 'warning',
+      ph: 6.8,
+      type: 'water_station'
+    },
+    { 
+      position: [25.5880, 91.8872] as [number, number], // Shillong Water Station
+      title: 'Shillong Water Station',
+      status: 'safe',
+      ph: 7.4,
+      type: 'water_station'
+    }
+  ];
+
+  const getMarkerColor = (riskLevel: string, type: string) => {
+    if (type === 'water_station') {
+      return '#0077B6'; // Blue for water stations
+    }
+    
+    switch (riskLevel) {
+      case 'high': return '#DC2626'; // Red
+      case 'medium': return '#F59E0B'; // Yellow
+      case 'low': return '#10B981'; // Green
+      default: return '#6B7280'; // Gray
+    }
+  };
+
+  const getCircleRadius = (cases: number) => {
+    if (cases > 40) return 8000;
+    if (cases > 25) return 6000;
+    return 4000;
+  };
 
   const [waterQualityData, setWaterQualityData] = React.useState<WaterQualityData[]>([
     {
@@ -380,31 +476,83 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, language }) => {
 
         {activeTab === 'mapping' && (
           <div className="space-y-6">
-            {/* GIS Map Placeholder */}
+            {/* GIS Map */}
             <div className="card">
               <h3 className="text-lg font-semibold mb-4">Interactive Disease Surveillance Map</h3>
-              <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg h-96 flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-2">Interactive GIS Map</p>
-                  <p className="text-sm text-gray-500">
-                    Real-time visualization of disease hotspots, water quality monitoring stations,
-                    and resource deployment across Northeast India
-                  </p>
-                  <div className="mt-4 flex justify-center space-x-2">
-                    <div className="flex items-center space-x-1">
-                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                      <span className="text-xs">High Risk</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                      <span className="text-xs">Medium Risk</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                      <span className="text-xs">Low Risk</span>
-                    </div>
-                  </div>
+              <div className="h-96 rounded-lg overflow-hidden border border-gray-200">
+                <MapContainer
+                  center={[25.5, 93.0]} // Center on Northeast India
+                  zoom={7}
+                  style={{ height: '100%', width: '100%' }}
+                  className="rounded-lg"
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                  
+                  {mapMarkers.map((marker, index) => (
+                    <React.Fragment key={index}>
+                      <Marker position={marker.position}>
+                        <Popup>
+                          <div className="p-2">
+                            <h4 className="font-semibold text-gray-800 mb-2">{marker.title}</h4>
+                            {marker.type === 'hotspot' ? (
+                              <div className="space-y-1 text-sm">
+                                <p><strong>Cases:</strong> {marker.cases}</p>
+                                <p><strong>Risk Level:</strong> <span className={`font-medium ${
+                                  marker.riskLevel === 'high' ? 'text-red-600' :
+                                  marker.riskLevel === 'medium' ? 'text-yellow-600' : 'text-green-600'
+                                }`}>{marker.riskLevel?.toUpperCase()}</span></p>
+                                <p><strong>Population:</strong> {marker.population}</p>
+                              </div>
+                            ) : (
+                              <div className="space-y-1 text-sm">
+                                <p><strong>Status:</strong> <span className={`font-medium ${
+                                  marker.status === 'safe' ? 'text-green-600' : 'text-yellow-600'
+                                }`}>{marker.status?.toUpperCase()}</span></p>
+                                <p><strong>pH Level:</strong> {marker.ph}</p>
+                                <p><strong>Type:</strong> Water Monitoring Station</p>
+                              </div>
+                            )}
+                          </div>
+                        </Popup>
+                      </Marker>
+                      
+                      {marker.type === 'hotspot' && marker.cases && (
+                        <Circle
+                          center={marker.position}
+                          radius={getCircleRadius(marker.cases)}
+                          pathOptions={{
+                            color: getMarkerColor(marker.riskLevel || 'low', marker.type),
+                            fillColor: getMarkerColor(marker.riskLevel || 'low', marker.type),
+                            fillOpacity: 0.2,
+                            weight: 2
+                          }}
+                        />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </MapContainer>
+              </div>
+              
+              {/* Map Legend */}
+              <div className="mt-4 flex justify-center space-x-6">
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                  <span className="text-sm">High Risk Hotspots</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
+                  <span className="text-sm">Medium Risk</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                  <span className="text-sm">Low Risk</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                  <span className="text-sm">Water Stations</span>
                 </div>
               </div>
             </div>

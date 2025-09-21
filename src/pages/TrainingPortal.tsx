@@ -43,6 +43,8 @@ interface TrainingModule {
   enrollments: number;
   prerequisites?: string[];
   learningOutcomes: string[];
+  thumbnail?: string;
+  hasVideo?: boolean;
 }
 
 interface Certificate {
@@ -71,6 +73,8 @@ const TrainingPortal: React.FC<TrainingPortalProps> = ({ user, language }) => {
       status: 'in_progress',
       rating: 4.8,
       enrollments: 234,
+      thumbnail: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      hasVideo: true,
       learningOutcomes: [
         'Identify common water-borne diseases',
         'Recognize early warning signs',
@@ -90,6 +94,8 @@ const TrainingPortal: React.FC<TrainingPortalProps> = ({ user, language }) => {
       rating: 4.9,
       enrollments: 189,
       prerequisites: ['Water-Borne Disease Surveillance'],
+      thumbnail: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      hasVideo: true,
       learningOutcomes: [
         'Implement emergency response protocols',
         'Coordinate with health authorities',
@@ -108,6 +114,8 @@ const TrainingPortal: React.FC<TrainingPortalProps> = ({ user, language }) => {
       status: 'in_progress',
       rating: 4.7,
       enrollments: 312,
+      thumbnail: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      hasVideo: true,
       learningOutcomes: [
         'Navigate the NiroGuard mobile app',
         'Submit case reports digitally',
@@ -126,6 +134,8 @@ const TrainingPortal: React.FC<TrainingPortalProps> = ({ user, language }) => {
       status: 'not_started',
       rating: 4.6,
       enrollments: 156,
+      thumbnail: 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      hasVideo: true,
       learningOutcomes: [
         'Design effective health messages',
         'Conduct community meetings',
@@ -144,6 +154,8 @@ const TrainingPortal: React.FC<TrainingPortalProps> = ({ user, language }) => {
       status: 'not_started',
       rating: 4.8,
       enrollments: 278,
+      thumbnail: 'https://images.unsplash.com/photo-1584467735867-4c4f5c7e8c28?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      hasVideo: true,
       learningOutcomes: [
         'Use personal protective equipment',
         'Follow infection control measures',
@@ -320,6 +332,27 @@ const TrainingPortal: React.FC<TrainingPortalProps> = ({ user, language }) => {
             <div className="grid lg:grid-cols-2 gap-6">
               {filteredModules.map((module) => (
                 <div key={module.id} className="card">
+                  {/* Video Thumbnail */}
+                  {module.hasVideo && module.thumbnail && (
+                    <div className="relative mb-4 group">
+                      <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                        <img
+                          src={module.thumbnail}
+                          alt={module.title}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="bg-white bg-opacity-90 rounded-full p-3">
+                            <Play className="h-6 w-6 text-gray-800" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="absolute top-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                        {module.duration}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-2">

@@ -58,7 +58,8 @@ const EducationPage: React.FC<EducationPageProps> = ({ user, language }) => {
       language: 'english',
       duration: '5 min',
       rating: 4.8,
-      views: 1250
+      views: 1250,
+      thumbnail: 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
     },
     {
       id: '2',
@@ -68,7 +69,8 @@ const EducationPage: React.FC<EducationPageProps> = ({ user, language }) => {
       category: 'hygiene',
       language: 'assamese',
       rating: 4.9,
-      views: 890
+      views: 890,
+      thumbnail: 'https://images.unsplash.com/photo-1576671081837-49000212a370?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
     },
     {
       id: '3',
@@ -79,7 +81,8 @@ const EducationPage: React.FC<EducationPageProps> = ({ user, language }) => {
       language: 'hindi',
       duration: '8 min',
       rating: 4.7,
-      views: 567
+      views: 567,
+      thumbnail: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
     },
     {
       id: '4',
@@ -89,7 +92,8 @@ const EducationPage: React.FC<EducationPageProps> = ({ user, language }) => {
       category: 'water_safety',
       language: 'english',
       rating: 4.6,
-      views: 423
+      views: 423,
+      thumbnail: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
     },
     {
       id: '5',
@@ -99,7 +103,8 @@ const EducationPage: React.FC<EducationPageProps> = ({ user, language }) => {
       category: 'emergency',
       language: 'bengali',
       rating: 4.9,
-      views: 234
+      views: 234,
+      thumbnail: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
     },
     {
       id: '6',
@@ -110,7 +115,32 @@ const EducationPage: React.FC<EducationPageProps> = ({ user, language }) => {
       language: 'manipuri',
       duration: '12 min',
       rating: 4.5,
-      views: 678
+      views: 678,
+      thumbnail: 'https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
+    },
+    {
+      id: '7',
+      title: 'Community Health Monitoring',
+      description: 'Video guide on how communities can monitor and report health issues effectively.',
+      type: 'video',
+      category: 'prevention',
+      language: 'english',
+      duration: '15 min',
+      rating: 4.7,
+      views: 892,
+      thumbnail: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
+    },
+    {
+      id: '8',
+      title: 'Water Testing at Home',
+      description: 'Learn simple methods to test water quality at home using basic tools.',
+      type: 'video',
+      category: 'water_safety',
+      language: 'hindi',
+      duration: '10 min',
+      rating: 4.6,
+      views: 543,
+      thumbnail: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
     }
   ]);
 
@@ -382,11 +412,48 @@ const EducationPage: React.FC<EducationPageProps> = ({ user, language }) => {
                   </div>
 
                   {/* Content Thumbnail */}
-                  <div className="bg-gray-100 rounded-lg h-32 mb-4 flex items-center justify-center">
-                    <div className="text-center">
-                      {getTypeIcon(content.type)}
-                      <p className="text-xs text-gray-500 mt-2">Preview Available</p>
+                  <div className="relative bg-gray-100 rounded-lg h-32 mb-4 overflow-hidden group">
+                    {content.thumbnail ? (
+                      <img
+                        src={content.thumbnail}
+                        alt={content.title}
+                        className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        {getTypeIcon(content.type)}
+                      </div>
+                    )}
+                    
+                    {/* Play button overlay for videos */}
+                    {content.type === 'video' && (
+                      <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <div className="bg-white rounded-full p-3 shadow-lg">
+                          <Play className="h-6 w-6 text-gray-800 ml-1" />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Type badge */}
+                    <div className="absolute top-2 left-2">
+                      <span className={`px-2 py-1 text-xs font-medium rounded text-white ${
+                        content.type === 'video' ? 'bg-red-500' :
+                        content.type === 'audio' ? 'bg-green-500' :
+                        content.type === 'poster' ? 'bg-blue-500' :
+                        content.type === 'document' ? 'bg-gray-500' : 'bg-purple-500'
+                      }`}>
+                        {content.type.toUpperCase()}
+                      </span>
                     </div>
+                    
+                    {/* Duration badge for videos/audio */}
+                    {content.duration && (
+                      <div className="absolute bottom-2 right-2">
+                        <span className="px-2 py-1 text-xs font-medium rounded bg-black bg-opacity-75 text-white">
+                          {content.duration}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Content Info */}
