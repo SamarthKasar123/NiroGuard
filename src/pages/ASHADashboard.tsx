@@ -195,7 +195,7 @@ const ASHADashboard: React.FC<ASHADashboardProps> = ({ user, language }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
             ASHA Worker Dashboard
           </h1>
           <p className="text-gray-600">
@@ -260,7 +260,7 @@ const ASHADashboard: React.FC<ASHADashboardProps> = ({ user, language }) => {
           <div className="space-y-6">
             {/* Filters and Search */}
             <div className="card">
-              <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:gap-4">
                 <div className="flex-1">
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -270,31 +270,33 @@ const ASHADashboard: React.FC<ASHADashboardProps> = ({ user, language }) => {
                       type="text"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="input-field pl-10"
+                      className="input-field pl-10 w-full"
                       placeholder="Search by patient name or location..."
                     />
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-2">
-                  <Filter className="h-4 w-4 text-gray-400" />
-                  <select
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                    className="input-field max-w-xs"
-                  >
-                    <option value="all">All Status</option>
-                    <option value="pending">Pending</option>
-                    <option value="followed_up">Followed Up</option>
-                    <option value="referred">Referred</option>
-                    <option value="resolved">Resolved</option>
-                  </select>
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                  <div className="flex items-center space-x-2">
+                    <Filter className="h-4 w-4 text-gray-400" />
+                    <select
+                      value={filterStatus}
+                      onChange={(e) => setFilterStatus(e.target.value)}
+                      className="input-field w-full sm:w-auto"
+                    >
+                      <option value="all">All Status</option>
+                      <option value="pending">Pending</option>
+                      <option value="followed_up">Followed Up</option>
+                      <option value="referred">Referred</option>
+                      <option value="resolved">Resolved</option>
+                    </select>
+                  </div>
+                  
+                  <button className="btn-primary flex items-center justify-center space-x-2 w-full sm:w-auto">
+                    <Plus className="h-4 w-4" />
+                    <span>New Case</span>
+                  </button>
                 </div>
-                
-                <button className="btn-primary flex items-center space-x-2">
-                  <Plus className="h-4 w-4" />
-                  <span>New Case</span>
-                </button>
               </div>
             </div>
 
@@ -302,19 +304,21 @@ const ASHADashboard: React.FC<ASHADashboardProps> = ({ user, language }) => {
             <div className="space-y-4">
               {filteredCases.map((case_) => (
                 <div key={case_.id} className="card">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-2">
-                        <h3 className="text-lg font-semibold">{case_.patientName}</h3>
-                        <span className={`px-2 py-1 text-xs font-medium rounded border ${getStatusColor(case_.status)}`}>
-                          {case_.status.replace('_', ' ')}
-                        </span>
-                        <span className={`px-2 py-1 text-xs font-medium rounded ${getSeverityColor(case_.severity)}`}>
-                          {case_.severity}
-                        </span>
+                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
+                    <div className="flex-1 mb-4 lg:mb-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 mb-2">
+                        <h3 className="text-lg font-semibold mb-2 sm:mb-0">{case_.patientName}</h3>
+                        <div className="flex flex-wrap gap-2">
+                          <span className={`px-2 py-1 text-xs font-medium rounded border ${getStatusColor(case_.status)}`}>
+                            {case_.status.replace('_', ' ')}
+                          </span>
+                          <span className={`px-2 py-1 text-xs font-medium rounded ${getSeverityColor(case_.severity)}`}>
+                            {case_.severity}
+                          </span>
+                        </div>
                       </div>
                       
-                      <div className="grid md:grid-cols-2 gap-4 text-sm">
+                      <div className="grid sm:grid-cols-1 lg:grid-cols-2 gap-4 text-sm">
                         <div>
                           <p className="text-gray-600 mb-1">
                             <strong>Symptoms:</strong> {case_.symptoms.join(', ')}
@@ -336,7 +340,7 @@ const ASHADashboard: React.FC<ASHADashboardProps> = ({ user, language }) => {
                       </div>
                     </div>
 
-                    <div className="flex space-x-2 ml-4">
+                    <div className="flex space-x-2 lg:ml-4">
                       <button className="btn-secondary p-2">
                         <Eye className="h-4 w-4" />
                       </button>

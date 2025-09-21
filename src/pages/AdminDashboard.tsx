@@ -273,9 +273,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, language }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
                 Health Department Dashboard
               </h1>
               <p className="text-gray-600">
@@ -283,11 +283,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, language }) => {
               </p>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
               <select
                 value={selectedTimeRange}
                 onChange={(e) => setSelectedTimeRange(e.target.value)}
-                className="input-field max-w-xs"
+                className="input-field w-full sm:w-auto"
               >
                 <option value="7d">Last 7 Days</option>
                 <option value="30d">Last 30 Days</option>
@@ -295,7 +295,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, language }) => {
                 <option value="1y">Last Year</option>
               </select>
               
-              <button className="btn-primary flex items-center space-x-2">
+              <button className="btn-primary flex items-center justify-center space-x-2 w-full sm:w-auto">
                 <Download className="h-4 w-4" />
                 <span>Export Report</span>
               </button>
