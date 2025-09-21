@@ -10,9 +10,10 @@ interface User {
 
 interface LoginPageProps {
   onLogin: (user: User) => void;
+  language: string;
 }
 
-const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
+const LoginPage: React.FC<LoginPageProps> = ({ onLogin, language }) => {
   const [formData, setFormData] = React.useState({
     phone: '',
     password: '',

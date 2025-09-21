@@ -2,7 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Droplets, Users, AlertTriangle, MapPin, Smartphone, Globe, TrendingUp } from 'lucide-react';
 
-const LandingPage: React.FC = () => {
+interface LandingPageProps {
+  language: string;
+}
+
+const LandingPage: React.FC<LandingPageProps> = ({ language }) => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
